@@ -37,8 +37,6 @@
     
     // PART III: convert an 8-bit gray scale image to a 1-bit dithered binary image using the Floyd-Steinberg algorithm
     [image writeFloydSteinbergColorDitheringToDirectoryPath:outputDirectory];
-    
-    
 }
 
 - (void)didReceiveMemoryWarning
