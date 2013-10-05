@@ -1,18 +1,56 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2519" systemVersion="12A206j" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="2">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="3084" systemVersion="11G63" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="2">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1856"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="2083"/>
     </dependencies>
     <scenes>
-        <!--class Prefix:identifier View Controller-->
+        <!--View Controller-->
         <scene sceneID="5">
             <objects>
                 <viewController id="2" customClass="ViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="3">
                         <rect key="frame" x="0.0" y="20" width="320" height="460"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e2F-x2-LMp">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="202" id="b01-jq-jD4"/>
+                                </constraints>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ibd-0H-x7a">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="202" id="9Z1-x0-iD7"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Orginal" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dU9-3L-EBi">
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Y only Gray" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8yT-Cf-1uE">
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="dU9-3L-EBi" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="131" id="5fk-PS-A74"/>
+                            <constraint firstItem="e2F-x2-LMp" firstAttribute="top" secondItem="3" secondAttribute="top" constant="25" id="JPx-f7-vYi"/>
+                            <constraint firstItem="dU9-3L-EBi" firstAttribute="top" secondItem="3" secondAttribute="top" type="default" id="MUr-Hz-daN"/>
+                            <constraint firstItem="e2F-x2-LMp" firstAttribute="trailing" secondItem="3" secondAttribute="trailing" type="default" id="MrJ-xC-9c8"/>
+                            <constraint firstItem="e2F-x2-LMp" firstAttribute="leading" secondItem="3" secondAttribute="leading" type="default" id="YUp-Vf-WtO"/>
+                            <constraint firstAttribute="bottom" secondItem="8yT-Cf-1uE" secondAttribute="bottom" constant="209" id="aDC-Nq-fmQ"/>
+                            <constraint firstItem="Ibd-0H-x7a" firstAttribute="trailing" secondItem="3" secondAttribute="trailing" type="default" id="epK-WP-9xV"/>
+                            <constraint firstItem="Ibd-0H-x7a" firstAttribute="leading" secondItem="3" secondAttribute="leading" type="default" id="h57-j5-xSq"/>
+                            <constraint firstItem="8yT-Cf-1uE" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="126" id="lyT-Rc-t56"/>
+                            <constraint firstAttribute="bottom" secondItem="Ibd-0H-x7a" secondAttribute="bottom" constant="4" id="lzI-y9-7uS"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="orginalImage" destination="e2F-x2-LMp" id="LZM-R2-09Z"/>
+                        <outlet property="yGrayImage" destination="Ibd-0H-x7a" id="5F5-xT-aeg"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4" sceneMemberID="firstResponder"/>
             </objects>
@@ -21,6 +59,6 @@
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
-        <simulatedScreenMetrics key="destination" type="retina4"/>
+        <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
 </document>

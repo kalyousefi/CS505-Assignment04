@@ -7,7 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-
+typedef NS_ENUM(NSUInteger, ImageType) {
+    YChannel,
+    YPbPrChannel
+};
 @interface ViewController : UIViewController
+@property (strong, nonatomic) IBOutlet UIImageView *orginalImage;
+@property (strong, nonatomic) IBOutlet UIImageView *yGrayImage;
+@property int width;
+@property int height;
 
 @end
