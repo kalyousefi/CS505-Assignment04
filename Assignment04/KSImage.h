@@ -28,5 +28,6 @@ typedef NS_ENUM(NSUInteger, ImageType) {
                           ForImageType:(ImageType)imageType
                         NumberOfImages:(int)numberOfImages;
 -(void) writeFloydSteinbergDitheringToDirectoryPath:(NSString*) dirPath;
+-(void) writeFloydSteinbergColorDitheringToDirectoryPath:(NSString*) dirPath;
 
 @end

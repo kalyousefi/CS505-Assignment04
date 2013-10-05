@@ -77,7 +77,7 @@
         
         // Retrieve color components
         const CGFloat* colorRGB = CGColorGetComponents([currentPixel.color CGColor]);
-        red = colorRGB[0]*255,   green = colorRGB[1]*255,  blue = colorRGB[2]*255, alpha = colorRGB[3]*255;        
+        red = colorRGB[0]*255,   green = colorRGB[1]*255,  blue = colorRGB[2]*255, alpha = colorRGB[3]*255;
         
         if (imageType == YChannel)
         {
@@ -143,10 +143,10 @@
 
 -(void) writeFloydSteinbergDitheringToDirectoryPath:(NSString*) dirPath
 {
-    curentAlpha = 1;    
+    curentAlpha = 1; // To set Gray level
     
+    // Convert NSArray pixelsArray to C array
     int pixelsArray[_width][_height];
-    int floydArray[_width][_height];
     int x,y,red,green,blue,alpha,Y;
     
     // Change image to gray scale
@@ -157,38 +157,132 @@
         const CGFloat* colorRGB = CGColorGetComponents([pixel.color CGColor]);
         red = colorRGB[0]*255,   green = colorRGB[1]*255,  blue = colorRGB[2]*255, alpha = colorRGB[3]*255;
         Y  =  0.299*red + 0.587*green + 0.114*blue;
-
-        // Convert NSArray pixelsArray to C array
+        
         pixelsArray[x][y] = Y;
-        pixel.color = [UIColor colorWithRed:Y/255.0 green:Y/255.0 blue:Y/255.0 alpha:alpha];       
-    }
-
-    
-    for (x=1; x<_width; x++) {
-        for (y=1; y<_height; y++) {
-
-            if (x>1 && x< _width && y>1 && y < _height) {
-                if (pixelsArray[x][y] > 128) floydArray[x][y] = 0;
-                else                         floydArray[x][y] = 255;
-                    
-            } else floydArray[x][y] = 0;
-        }
     }
     
     [_pixelsArray removeAllObjects];
     
-    for (x=1; x<_width; x++) {
-        for (y=1; y<_height; y++) {
-            KSPixel *pixel = [[KSPixel alloc]initWithX:x Y:y Red:floydArray[x][y] Green:floydArray[x][y] Blue:floydArray[x][y] Alpha:255];
+    int error,displayed;
+    
+    for (y=1; y<_height; y++) {
+        for (x=1; x<_width; x++) {
+            if (pixelsArray[x][y] > 128) displayed = 255;
+            else                         displayed = 0;
+            
+            error = pixelsArray[x][y] - displayed;
+            pixelsArray[x][y] = displayed;
+            
+            if (x + 1 < _width)     pixelsArray[x+1][y]   += 7 * error / 16 ;
+            if (y + 1 < _height) {
+                if (x - 1 > 0)      pixelsArray[x-1][y+1] += 3 * error / 16 ;
+                                    pixelsArray[x]  [y+1] += 5 * error / 16 ;
+                if (x + 1 < _width) pixelsArray[x+1][y+1] += 1 * error / 16 ;
+            }
+            
+            KSPixel *pixel = [[KSPixel alloc]
+                              initWithX:x Y:y Red:pixelsArray[x][y] Green:pixelsArray[x][y] Blue:pixelsArray[x][y] Alpha:1];
             [_pixelsArray addObject:pixel];
         }
     }
     
     [self writeImageFile:_filename ToDirectoryPath:dirPath ForImageType:RGB];
-    
-    
 }
 
+-(void) writeFloydSteinbergColorDitheringToDirectoryPath:(NSString*) dirPath
+{
+    curentAlpha = 1;
+    
+    UIColor *pixelsArray[_width][_height];
+    int x,y;
+    CGFloat red,green,blue,alpha;
+    
+    // Change image to gray scale
+    for (KSPixel *pixel in _pixelsArray) {
+        
+        x = pixel.position.x;
+        y = pixel.position.y;
+        if (x<_width && y<_height) {
+            pixelsArray[x][y] = pixel.color;
+        }        
+    }
 
+    [_pixelsArray removeAllObjects];
+
+    int errorR,errorG,errorB,displayed;
+    for (y=1; y<_height; y++) {
+        for (x=1; x<_width; x++) {
+            //NSLog(@"545445x=%d y=%d",x,y);
+            // Retrieve color components
+            const CGFloat* colorRGB = CGColorGetComponents([pixelsArray[x][y] CGColor]);
+            red = colorRGB[0]*255,   green = colorRGB[1]*255,  blue = colorRGB[2]*255, alpha = colorRGB[3]*255;
+            
+            if (red > 128) displayed = 255;
+            else             displayed = 0;
+            errorR = red - displayed;
+            red = displayed;
+
+            if (green > 128) displayed = 255;
+            else             displayed = 0;
+            errorG = green - displayed;
+            green = displayed;
+
+            if (blue > 128) displayed = 255;
+            else             displayed = 0;
+            errorB = blue - displayed;
+            blue = displayed;
+
+            pixelsArray[x][y] = [UIColor colorWithRed:red/255.0 green:green/255.0 blue:blue/255.0 alpha:1];
+            
+            if (x + 1 < _width){
+                const CGFloat* colorRGB = CGColorGetComponents([pixelsArray[x+1][y] CGColor]);
+                red = colorRGB[0]*255,   green = colorRGB[1]*255,  blue = colorRGB[2]*255, alpha = colorRGB[3]*255;
+                
+                red   += 7 * errorR / 16;
+                green += 7 * errorG / 16;
+                blue  += 7 * errorB / 16;
+                
+                pixelsArray[x+1][y] = [UIColor colorWithRed:red/255.0 green:green/255.0 blue:blue/255.0 alpha:1];
+            }
+            if (y + 1 < _height) {
+                if (x - 1 > 0){
+                    const CGFloat* colorRGB = CGColorGetComponents([pixelsArray[x-1][y+1] CGColor]);
+                    red = colorRGB[0]*255,   green = colorRGB[1]*255,  blue = colorRGB[2]*255, alpha = colorRGB[3]*255;
+                    
+                    red   += 3 * errorR / 16;
+                    green += 3 * errorG / 16;
+                    blue  += 3 * errorB / 16;
+                    
+                    pixelsArray[x-1][y+1] = [UIColor colorWithRed:red/255.0 green:green/255.0 blue:blue/255.0 alpha:1];                    
+                }                
+                const CGFloat* colorRGB = CGColorGetComponents([pixelsArray[x][y+1] CGColor]);
+                red = colorRGB[0]*255,   green = colorRGB[1]*255,  blue = colorRGB[2]*255, alpha = colorRGB[3]*255;
+                
+                red   += 5 * errorR / 16;
+                green += 5 * errorG / 16;
+                blue  += 5 * errorB / 16;
+                
+                pixelsArray[x][y+1] = [UIColor colorWithRed:red/255.0 green:green/255.0 blue:blue/255.0 alpha:1];
+
+                if (x + 1 < _width) {                    
+                    const CGFloat* colorRGB = CGColorGetComponents([pixelsArray[x+1][y+1] CGColor]);
+                    red = colorRGB[0]*255,   green = colorRGB[1]*255,  blue = colorRGB[2]*255, alpha = colorRGB[3]*255;
+                    
+                    red   += 1 * errorR / 16;
+                    green += 1 * errorG / 16;
+                    blue  += 1 * errorB / 16;
+                    
+                    pixelsArray[x+1][y+1] = [UIColor colorWithRed:red/255.0 green:green/255.0 blue:blue/255.0 alpha:1];
+
+                }
+            }
+            
+            KSPixel *pixel = [[KSPixel alloc] initWithX:x Y:y Color:pixelsArray[x][y]];
+            [_pixelsArray addObject:pixel];
+        }
+    }
+    
+    [self writeImageFile:_filename ToDirectoryPath:dirPath ForImageType:RGB];
+}
 
 @end

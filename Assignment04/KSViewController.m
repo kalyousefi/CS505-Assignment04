@@ -26,7 +26,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    NSString *imageFile       = @"/Users/khaledalyousefi/Dropbox/CSC-505/Homeworks/rose.png";
+    NSString *imageFile       = @"/Users/khaledalyousefi/Dropbox/CSC-505/Homeworks/suleman.jpg";
     NSString *outputDirectory = @"/Users/khaledalyousefi/Documents/Homeworks" ;
     KSImage *image = [[KSImage alloc] initWithImageFile:imageFile];
     
@@ -36,7 +36,7 @@
     // PART II : create sequence of png files that fade from color image into gray image for YPbPr space
     
     // PART III: convert an 8-bit gray scale image to a 1-bit dithered binary image using the Floyd-Steinberg algorithm
-    [image writeFloydSteinbergDitheringToDirectoryPath:outputDirectory];
+    [image writeFloydSteinbergColorDitheringToDirectoryPath:outputDirectory];
     
     
 }
