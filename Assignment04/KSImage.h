@@ -20,10 +20,12 @@ typedef NS_ENUM(NSUInteger, ImageType) {
 @property int width;
 @property int height;
 @property (nonatomic) NSMutableArray *pixelsArray;
+@property (nonatomic) NSMutableArray *pixelsArrayYPbPr;
 @property (nonatomic) NSString *filename;
+@property (nonatomic) NSString *filenameWithoutExtension;
 
 -(id) initWithImageFile:(NSString*)filePath;
--(void) writeImageFile:(NSString*)filename ToDirectoryPath:(NSString*)dirPath ForImageType:(ImageType)imageType;
+-(void) writeImageToDirectoryPath:(NSString*)dirPath ForImageType:(ImageType)imageType;
 -(void) fadeImageToGrayToDirectoryPath:(NSString*)dirPath
                           ForImageType:(ImageType)imageType
                         NumberOfImages:(int)numberOfImages;
