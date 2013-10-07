@@ -7,12 +7,60 @@
 //
 
 #import "KSViewController.h"
+#import "KSImage.h"
+#import "KSPixel.h"
 
 @interface KSViewController ()
 
 @end
 
 @implementation KSViewController
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    NSString *imagePath       = @"/Users/khaledalyousefi/Dropbox/CSC-505/rose.png";
+    NSString *outputDirPath   = @"/Users/khaledalyousefi/Dropbox/CSC-505/Homeworks/images" ;
+   
+    /*
+    //#####################################  PART I-A  #####################################
+    // Read the image into RGB space
+    KSImage *image1 = [[KSImage alloc] initWithImageFile:imagePath];
+    // Fade an image into Gray within RGB color space by creating a sequence of images
+    [image1 fadeGrayToPath:outputDirPath NumberOfImages:10];
+    
+    //#####################################  PART I-B  #####################################
+    // Read the image into RGB space
+    KSImage *image2 = [[KSImage alloc] initWithImageFile:imagePath];
+    // Convert the image to YPbPr color space from RGB color space
+    [image2 convertToColorSpace:YPbPr];
+    // Fade an image into Gray within YPbPr color space by creating a sequence of images
+    [image2 fadeGrayToPath:outputDirPath NumberOfImages:10];
+    // Convert the image back to RGB color space
+    [image2 convertToColorSpace:RGB];
+    
+    //#####################################  PART II  ######################################
+    // Read the image into RGB space
+    KSImage *image3 = [[KSImage alloc] initWithImageFile:imagePath];
+    // Convert an 8-bit gray scale image to a 1-bit dithered binary image using Floyd-Steinberg algorithm
+    [image3 ditherBlackWhiteToPath:outputDirPath];
+    
+    //#####################################  E X T R A  ####################################
+    // Read the image into RGB space
+    KSImage *image4 = [[KSImage alloc] initWithImageFile:imagePath];
+    // Redraw a colored image with 6-color mode using Floyd-Steinberg algorithm
+    [image4 ditherSixColorsToPath:outputDirPath];
+    //[image3 writeImageToPath:outputDirPath];
+    // Resize an image by doubling its size
+    [image4 resizeImage:2 ToPath:outputDirPath];
+    */
+
+    // Read the image into RGB space
+    KSImage *image4 = [[KSImage alloc] initWithImageFile:imagePath];
+
+    
+}
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -23,29 +71,6 @@
     return self;
 }
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    NSString *imageFile       = @"/Users/khaledalyousefi/Dropbox/CSC-505/Homeworks/rose.png";
-    NSString *outputDirectory = @"/Users/khaledalyousefi/Documents/Homeworks" ;
-    KSImage *image = [[KSImage alloc] initWithImageFile:imageFile];
-    
-    // PART I  : create sequence of png files that fade from color image into gray image discarding Pb and Pr components
-    //[image fadeImageToGrayToDirectoryPath:outputDirectory ForImageType:YChannel NumberOfImages:10];
-    
-    // PART II : create sequence of png files that fade from color image into gray image for YPbPr space
-    [image fadeImageToGrayToDirectoryPath:outputDirectory ForImageType:RGB NumberOfImages:10];
-    
-    
-    //[image writeYPbPrImageFile:imageFile ToDirectoryPath:outputDirectory];
-    
-    //[image fadeImageToGrayToDirectoryPath:outputDirectory ForImageType:YPbPrChannel NumberOfImages:10];
-
-    //[image writeImageToDirectoryPath:outputDirectory ForImageType:YPbPrChannel];
-    
-    // PART III: convert an 8-bit gray scale image to a 1-bit dithered binary image using the Floyd-Steinberg algorithm
-    //[image writeFloydSteinbergDitheringToDirectoryPath:outputDirectory];
-}
 
 - (void)didReceiveMemoryWarning
 {

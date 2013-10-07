@@ -114,7 +114,7 @@
     }
 }
 
--(void) writeImageArray:(NSArray*)pixelMap ToPathFile:(NSString*)targetPath ForImageType:(ImageType)imageType
+-(void) writeImageArray:(NSArray*)pixelMap ToPathFile:(NSString*)targetPath ForImageType:(ColorSpace)imageType
 {    
     UIColor *currentColor;
     Pixel *currentPixel;
@@ -173,7 +173,7 @@
 }
 
 -(void) createGrayFadeImagesFromFile:(NSString*)file ToPathDirectory:(NSString*)targetDir
-                       NumberOfImages:(int)numberOfImages ForImageType:(ImageType)imageType
+                       NumberOfImages:(int)numberOfImages ForImageType:(ColorSpace)imageType
 {
     
     NSString *targetPath;

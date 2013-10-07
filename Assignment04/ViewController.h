@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-typedef NS_ENUM(NSUInteger, ImageType) {
+typedef NS_ENUM(NSUInteger, ColorSpace) {
     YChannel,
     YPbPrChannel
 };

@@ -11,10 +11,12 @@
 @interface KSPixel : NSObject
 
 @property CGPoint position;
-@property UIColor *color;
+@property int red;
+@property int green;
+@property int blue;
 
-- (id)initWithX:(int)x Y:(int)y Red:(int)red Green:(int)green Blue:(int)blue Alpha:(int)alpha;
-- (id)initWithPoint:(CGPoint)point Red:(int)red Green:(int)green Blue:(int)blue Alpha:(int)alpha;
+- (id)initWithX:(int)x Y:(int)y Red:(int)red Green:(int)green Blue:(int)blue;
+- (id)initWithPoint:(CGPoint)point Red:(int)red Green:(int)green Blue:(int)blue;
 - (id)initWithPoint:(CGPoint)point Color:(UIColor*)color;
 - (id)initWithX:(int)x Y:(int)y Color:(UIColor*)color;
 @end

@@ -7,8 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "KSImage.h"
-#import "KSPixel.h"
 
 @interface KSViewController : UIViewController
 

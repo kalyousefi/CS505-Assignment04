@@ -10,18 +10,22 @@
 
 @implementation KSPixel
 
-- (id)initWithX:(int)x Y:(int)y Red:(int)red Green:(int)green Blue:(int)blue Alpha:(int)alpha
+- (id)initWithX:(int)x Y:(int)y Red:(int)red Green:(int)green Blue:(int)blue
 {
     _position = CGPointMake(x, y);
-    _color    = [UIColor colorWithRed:red/255.0 green:green/255.0 blue:blue/255.0 alpha:alpha];
+    _red      = red;
+    _green    = green;
+    _blue     = blue;
     
     return self;
 }
 
-- (id)initWithPoint:(CGPoint)position Red:(int)red Green:(int)green Blue:(int)blue Alpha:(int)alpha
+- (id)initWithPoint:(CGPoint)position Red:(int)red Green:(int)green Blue:(int)blue
 {
     _position = position;
-    _color    = [UIColor colorWithRed:red/255.0 green:green/255.0 blue:blue/255.0 alpha:alpha];
+    _red      = red;
+    _green    = green;
+    _blue     = blue;
     
     return self;
 }
@@ -29,7 +33,10 @@
 - (id)initWithPoint:(CGPoint)position Color:(UIColor*)color
 {
     _position = position;
-    _color    = color;
+    const CGFloat* colorRGB = CGColorGetComponents([color CGColor]);
+    _red = colorRGB[0]*255;
+    _green = colorRGB[1]*255;
+    _blue = colorRGB[2]*255;
     
     return self;
 }
@@ -37,7 +44,10 @@
 - (id)initWithX:(int)x Y:(int)y Color:(UIColor*)color
 {
     _position = CGPointMake(x, y);
-    _color    = color;
+    const CGFloat* colorRGB = CGColorGetComponents([color CGColor]);
+    _red = colorRGB[0]*255;
+    _green = colorRGB[1]*255;
+    _blue = colorRGB[2]*255;
     
     return self;
 }

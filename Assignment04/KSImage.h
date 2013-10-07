@@ -9,10 +9,9 @@
 #import <Foundation/Foundation.h>
 #import "KSPixel.h"
 
-typedef NS_ENUM(NSUInteger, ImageType) {
+typedef NS_ENUM(NSUInteger, ColorSpace) {
     RGB,
-    YChannel,
-    YPbPrChannel
+    YPbPr
 };
 
 @interface KSImage : NSObject
@@ -20,16 +19,16 @@ typedef NS_ENUM(NSUInteger, ImageType) {
 @property int width;
 @property int height;
 @property (nonatomic) NSMutableArray *pixelsArray;
-@property (nonatomic) NSMutableArray *pixelsArrayYPbPr;
 @property (nonatomic) NSString *filename;
 @property (nonatomic) NSString *filenameWithoutExtension;
+@property ColorSpace colorSpace;
 
--(id) initWithImageFile:(NSString*)filePath;
--(void) writeImageToDirectoryPath:(NSString*)dirPath ForImageType:(ImageType)imageType;
--(void) fadeImageToGrayToDirectoryPath:(NSString*)dirPath
-                          ForImageType:(ImageType)imageType
-                        NumberOfImages:(int)numberOfImages;
--(void) writeFloydSteinbergDitheringToDirectoryPath:(NSString*) dirPath;
--(void) writeFloydSteinbergColorDitheringToDirectoryPath:(NSString*) dirPath;
+-(id)   initWithImageFile:(NSString*)filePath;
+-(void) writeImageArray:(NSArray*) pixelArray ToPath:(NSString*)dirPath;
+-(void) fadeGrayToPath:(NSString*) dirPath NumberOfImages:(int)numberOfImages;
+-(void) ditherBlackWhiteToPath:(NSString*) dirPath;
+-(void) ditherSixColorsToPath:(NSString*) dirPath;
+-(void) convertToColorSpace:(ColorSpace)colorSpace;
+-(void) resizeImage:(int)stepSize ToPath:(NSString*)dirPath;
 
 @end

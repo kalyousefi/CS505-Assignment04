@@ -10,6 +10,7 @@
 
 @interface KSImage (){
     float curentAlpha;
+    NSMutableArray *tempPixelsArray;
 }
 @end
 
@@ -19,7 +20,7 @@
 {
     NSFileHandle *file = [NSFileHandle fileHandleForReadingAtPath: filePath];
     _pixelsArray      = [[NSMutableArray alloc]init];
-    _pixelsArrayYPbPr = [[NSMutableArray alloc]init];
+    tempPixelsArray      = [[NSMutableArray alloc]init];
     int red,green,blue,alpha,pixelInfo;
     KSPixel *currentPixel;
     
@@ -50,103 +51,153 @@
                 alpha = data[pixelInfo + 3];
                 //NSLog(@"RGB:(%d,%d,%d) point:(%d,%d)",red,green,blue,x,y);
                 
-                UInt8 Y  =  0.299*red + 0.587*green + 0.114*blue;
-                UInt8 Pb = -0.168*red - 0.331*green + 0.500*blue;
-                UInt8 Pr =  0.500*red - 0.418*green - 0.081*blue;
-                
-                currentPixel = [[KSPixel alloc]initWithX:x Y:y Red:red Green:green Blue:blue Alpha:alpha];
-                [_pixelsArray      addObject:[[KSPixel alloc]initWithX:x Y:y Red:red Green:green Blue:blue Alpha:alpha]];
-                [_pixelsArrayYPbPr addObject:[[KSPixel alloc]initWithX:x Y:y Red:Y   Green:Pb    Blue:Pr   Alpha:alpha]];
+                currentPixel = [[KSPixel alloc]initWithX:x Y:y Red:red Green:green Blue:blue];
+                [_pixelsArray      addObject:[[KSPixel alloc]initWithX:x Y:y Red:red Green:green Blue:blue]];
             }
         }
     }
+    _colorSpace = RGB;
     _filename = [filePath lastPathComponent];
     _filenameWithoutExtension = [[_filename componentsSeparatedByString:@"."]objectAtIndex:0];
-    curentAlpha = 0;
     return self;
 }
 
 
--(void) writeImageToDirectoryPath:(NSString*)dirPath ForImageType:(ImageType)imageType
+-(void) writeImageArray:(NSArray*) pixelArray ToPath:(NSString*)dirPath
 {
     UIColor *currentColor;
-    KSPixel *currentPixel;
-    int x,y,red,green,blue,alpha,Y;
+    KSPixel *pixel;
     
     UIGraphicsBeginImageContext(CGSizeMake(_width, _height));
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextFillRect(context, CGRectMake(0, 0, _width, _height));
     
-    for (int i=0; i<[_pixelsArray count]; i++) {
-        if      (imageType == YChannel || imageType==RGB)     currentPixel = [_pixelsArray objectAtIndex:i];
-        else if (imageType == YPbPrChannel)                   currentPixel = [_pixelsArrayYPbPr objectAtIndex:i];
-      
-        x     = currentPixel.position.x;
-        y     = currentPixel.position.y;
+    for (int i=0; i<[pixelArray count]; i++) {
+        pixel = [pixelArray objectAtIndex:i];
         
-        // Retrieve color components
-        const CGFloat* colorRGB = CGColorGetComponents([currentPixel.color CGColor]);
-        red = colorRGB[0]*255,   green = colorRGB[1]*255,  blue = colorRGB[2]*255, alpha = colorRGB[3]*255;
-        
-        Y  =  0.299*red + 0.587*green + 0.114*blue;
-        
-        // Alpha-Blending
-        red   = (1-curentAlpha) * red   + curentAlpha * Y;
-        green = (1-curentAlpha) * green + curentAlpha * Y;
-        blue  = (1-curentAlpha) * blue  + curentAlpha * Y;
-        //NSLog(@"RGB:(%d,%d,%d) point:(%d,%d)",red,green,blue,x,y);
-
         // Draw this pixel
-        currentColor = [UIColor colorWithRed:red/255.0 green:green/255.0 blue:blue/255.0 alpha:alpha];
+        currentColor = [UIColor colorWithRed:pixel.red/255.0 green:pixel.green/255.0 blue:pixel.blue/255.0 alpha:1];
         CGContextSetFillColorWithColor(context, [currentColor CGColor]);
-        CGContextFillRect(context, CGRectMake(x, y, 1.0, 1.0));
-        //NSLog(@"RGB:(%d,%d,%d) point:(%d,%d)",red,green,blue,x,y);
-        //NSLog(@"RGB:(%f,%f,%f) point:(%d,%d)",colorRGB[0],colorRGB[1],colorRGB[2],x,y);
+        CGContextFillRect(context, CGRectMake(pixel.position.x, pixel.position.y, 1.0, 1.0));
     }
     
     // Write context to UIImage
     UIImage* image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
-    // Write the image to the file
-    NSString *targetPath = [NSString stringWithFormat:@"%@/%@",dirPath,_filename]; // XXX Change filename
-    [UIImagePNGRepresentation(image) writeToFile:targetPath atomically:YES];
+    // Write UIImage to a file
+    [UIImagePNGRepresentation(image) writeToFile:[NSString stringWithFormat:@"%@/%@",dirPath,_filename] atomically:YES];
 }
 
--(void) fadeImageToGrayToDirectoryPath:(NSString*) dirPath
-                          ForImageType:(ImageType) imageType
-                        NumberOfImages:(int)       numberOfImages
+-(void) fadeGrayToPath:(NSString*) dirPath NumberOfImages:(int)numberOfImages
 {
-    
-    for (float i=0; i<=numberOfImages; i++) {
+    KSPixel *pixel;
+    UInt8 red,green,blue,Y;
+    for (int i=0; i<=numberOfImages; i++) {
         // Name the output file
-        if      (i<10)  _filename = [NSString stringWithFormat:@"%@00%.0f.png",_filenameWithoutExtension,i];
-        else if (i<100) _filename = [NSString stringWithFormat:@"%@0%.0f.png" ,_filenameWithoutExtension,i];
-        else            _filename = [NSString stringWithFormat:@"%@%.0f.png"  ,_filenameWithoutExtension,i];
-        
+        _filename = [NSString stringWithFormat:@"%@%03d.png",_filenameWithoutExtension,i];
         // Alpha-Blend
-        curentAlpha = i/numberOfImages;
         
-        [self writeImageToDirectoryPath:dirPath ForImageType:imageType];
+        curentAlpha = (float)i/numberOfImages;
+        
+        for (int j=0; j<[_pixelsArray count]; j++) {
+            pixel = [_pixelsArray objectAtIndex:j];
+            red = pixel.red;
+            green = pixel.green;
+            blue = pixel.blue;
+            
+            Y  =  0.299*red + 0.587*green + 0.114*blue;
+            // Alpha-Blending
+            red   = (1-curentAlpha) * red   + curentAlpha * Y;
+            green = (1-curentAlpha) * green + curentAlpha * Y;
+            blue  = (1-curentAlpha) * blue  + curentAlpha * Y;
+            //NSLog(@"RGB:(%d,%d,%d) point:(%d,%d)",red,green,blue,x,y);
+
+            [pixel setRed:red];
+            [pixel setGreen:green];
+            [pixel setBlue:blue];
+            
+            [tempPixelsArray addObject:pixel];
+            
+        }
+        
+        [self writeImageArray:tempPixelsArray ToPath:dirPath];
+        [tempPixelsArray removeAllObjects];
+    }
+}
+/*
+ 
+
+
+-(void) fadeGrayToPath:(NSString*) dirPath NumberOfImages:(int)numberOfImages
+{
+ 
+    for (int i=0; i<=numberOfImages; i++) {
+        // Name the output file
+        _filename = [NSString stringWithFormat:@"%@%03d.png",_filenameWithoutExtension,i];
+        // Alpha-Blend
+        curentAlpha = (float)i/numberOfImages;
+        
+        [self writeImageToPath:dirPath];
     }
 }
 
--(void) writeFloydSteinbergDitheringToDirectoryPath:(NSString*) dirPath
+
+-(void) fadeImage:(KSImage*) image1 ToImage:(KSImage*) image2
 {
-    curentAlpha = 1; // To set Gray level
     
+    for (int i=0; i<=numberOfImages; i++) {
+        // Name the output file
+        _filename = [NSString stringWithFormat:@"%@%03d.png",_filenameWithoutExtension,i];
+        // Alpha-Blend
+        curentAlpha = (float)i/numberOfImages;
+        
+        [self writeImageToPath:dirPath];
+    }
+}
+*/
+
+
+
+-(void) convertToColorSpace:(ColorSpace)colorSpace
+{
+    // Read Image Pixels
+    for (int i=0; i<[_pixelsArray count]; i++) {
+        KSPixel *pixel = [_pixelsArray objectAtIndex:i];
+       
+        if (colorSpace == YPbPr) {
+            float Y  =  (float)0.299*pixel.red + (float)0.587*pixel.green + (float)0.114*pixel.blue;
+            float Pb = (float)-0.168*pixel.red - (float)0.331*pixel.green + (float)0.500*pixel.blue;
+            float Pr =  (float)0.500*pixel.red - (float)0.418*pixel.green - (float)0.081*pixel.blue;
+            
+            pixel = [[KSPixel alloc]initWithX:pixel.position.x Y:pixel.position.y Red:Y Green:Pb Blue:Pr];
+        }
+        else if (colorSpace == RGB)
+        {
+            float Y = pixel.red, Pb = pixel.green, Pr = pixel.blue;
+            int red   = 1.000*Y + 0.000*Pb + 1.402*Pr;
+            int green = 1.000*Y - 0.344*Pb - 0.714*Pr;
+            int blue  = 1.000*Y + 1.772*Pb + 0.000*Pr;
+            pixel = [[KSPixel alloc]initWithX:pixel.position.x Y:pixel.position.y Red:red Green:green Blue:blue];
+        }
+        
+        [_pixelsArray replaceObjectAtIndex:i withObject:pixel];
+    }
+    _colorSpace = colorSpace;
+}
+
+-(void) ditherBlackWhiteToPath:(NSString*) dirPath
+{
     // Convert NSArray pixelsArray to C array
     int pixelsArray[_width][_height];
-    int x,y,red,green,blue,alpha,Y;
+    int x,y,Y;
     
     // Change image to gray scale
     for (KSPixel *pixel in _pixelsArray) {
         x = pixel.position.x;
         y = pixel.position.y;
-        // Retrieve color components
-        const CGFloat* colorRGB = CGColorGetComponents([pixel.color CGColor]);
-        red = colorRGB[0]*255,   green = colorRGB[1]*255,  blue = colorRGB[2]*255, alpha = colorRGB[3]*255;
-        Y  =  0.299*red + 0.587*green + 0.114*blue;
+        
+        Y  =  0.299*pixel.red + 0.587*pixel.green + 0.114*pixel.blue;
         
         pixelsArray[x][y] = Y;
     }
@@ -171,44 +222,43 @@
             }
             
             KSPixel *pixel = [[KSPixel alloc]
-                              initWithX:x Y:y Red:pixelsArray[x][y] Green:pixelsArray[x][y] Blue:pixelsArray[x][y] Alpha:1];
+                              initWithX:x Y:y Red:pixelsArray[x][y] Green:pixelsArray[x][y] Blue:pixelsArray[x][y]];
             [_pixelsArray addObject:pixel];
         }
     }
     
     _filename = [NSString stringWithFormat:@"%@_FSDither.png"  ,_filenameWithoutExtension];
     
-    [self writeImageToDirectoryPath:dirPath ForImageType:RGB];
+    [self writeImageArray:_pixelsArray ToPath:dirPath];
 }
 
--(void) writeFloydSteinbergColorDitheringToDirectoryPath:(NSString*) dirPath
+-(void) ditherSixColorsToPath:(NSString*) dirPath
 {
-    curentAlpha = 1;
-    
     UIColor *pixelsArray[_width][_height];
     int x,y;
-    CGFloat red,green,blue,alpha;
     
-    // Change image to gray scale
-    for (KSPixel *pixel in _pixelsArray) {
-        
+    // convert NSArray to c array
+    for (KSPixel *pixel in _pixelsArray) {        
         x = pixel.position.x;
         y = pixel.position.y;
         if (x<_width && y<_height) {
-            pixelsArray[x][y] = pixel.color;
+            UIColor *color = [UIColor colorWithRed:pixel.red/255.0 green:pixel.green/255.0 blue:pixel.blue/255.0 alpha:1];
+            pixelsArray[x][y] = color;
         }
     }
-    
+
+    // remove all image pixels to assign the new pixels
     [_pixelsArray removeAllObjects];
     
     int errorR,errorG,errorB,displayed;
+    
     for (y=1; y<_height; y++) {
         for (x=1; x<_width; x++) {
-            //NSLog(@"545445x=%d y=%d",x,y);
+            
             // Retrieve color components
             const CGFloat* colorRGB = CGColorGetComponents([pixelsArray[x][y] CGColor]);
-            red = colorRGB[0]*255,   green = colorRGB[1]*255,  blue = colorRGB[2]*255, alpha = colorRGB[3]*255;
-            
+            int red = colorRGB[0]*255,   green = colorRGB[1]*255,  blue = colorRGB[2]*255, alpha = colorRGB[3]*255;
+
             if (red > 128) displayed = 255;
             else             displayed = 0;
             errorR = red - displayed;
@@ -275,8 +325,36 @@
     }
     
     _filename = [NSString stringWithFormat:@"%@_FSDitherColor.png"  ,_filenameWithoutExtension];
-    [self writeImageToDirectoryPath:dirPath ForImageType:RGB];
+    [self writeImageArray:_pixelsArray ToPath:dirPath];
 }
 
-
+-(void) resizeImage:(int)stepSize ToPath:(NSString*)dirPath
+{
+    UIColor *currentColor;
+    KSPixel *pixel;
+    UInt8 red,green,blue;
+    
+    UIGraphicsBeginImageContext(CGSizeMake(_width*stepSize, _height*stepSize));
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextFillRect(context, CGRectMake(0, 0, _width*stepSize, _height*stepSize));
+    
+    for (int i=0; i<[_pixelsArray count]; i++) {
+        pixel = [_pixelsArray objectAtIndex:i];
+        red = pixel.red;
+        green = pixel.green;
+        blue = pixel.blue;
+        
+        // Draw this pixel
+        currentColor = [UIColor colorWithRed:red/255.0 green:green/255.0 blue:blue/255.0 alpha:1];
+        CGContextSetFillColorWithColor(context, [currentColor CGColor]);
+        CGContextFillRect(context, CGRectMake(pixel.position.x*stepSize, pixel.position.y*stepSize, stepSize, stepSize));
+    }
+    
+    // Write context to UIImage
+    UIImage* image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    // Write UIImage to a file
+    [UIImagePNGRepresentation(image) writeToFile:[NSString stringWithFormat:@"%@/%@",dirPath,_filename] atomically:YES];
+}
 @end
