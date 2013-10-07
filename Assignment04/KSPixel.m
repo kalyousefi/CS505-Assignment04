@@ -12,27 +12,30 @@
 
 - (id)initWithX:(int)x Y:(int)y Red:(int)red Green:(int)green Blue:(int)blue
 {
-    _position = CGPointMake(x, y);
-    _red      = red;
-    _green    = green;
-    _blue     = blue;
+    _x      = x;
+    _y      = y;
+    _red    = red;
+    _green  = green;
+    _blue   = blue;
     
     return self;
 }
 
 - (id)initWithPoint:(CGPoint)position Red:(int)red Green:(int)green Blue:(int)blue
 {
-    _position = position;
-    _red      = red;
-    _green    = green;
-    _blue     = blue;
+    _x      = position.x;
+    _y      = position.y;
+    _red    = red;
+    _green  = green;
+    _blue   = blue;
     
     return self;
 }
 
 - (id)initWithPoint:(CGPoint)position Color:(UIColor*)color
 {
-    _position = position;
+    _x      = position.x;
+    _y      = position.y;
     const CGFloat* colorRGB = CGColorGetComponents([color CGColor]);
     _red = colorRGB[0]*255;
     _green = colorRGB[1]*255;
@@ -43,7 +46,8 @@
 
 - (id)initWithX:(int)x Y:(int)y Color:(UIColor*)color
 {
-    _position = CGPointMake(x, y);
+    _x      = x;
+    _y      = y;
     const CGFloat* colorRGB = CGColorGetComponents([color CGColor]);
     _red = colorRGB[0]*255;
     _green = colorRGB[1]*255;

@@ -10,7 +10,8 @@
 
 @interface KSPixel : NSObject
 
-@property CGPoint position;
+@property int x;
+@property int y;
 @property int red;
 @property int green;
 @property int blue;
