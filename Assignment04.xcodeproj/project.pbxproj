@@ -17,8 +17,6 @@
 		B99E0F2117FE641300B35D4B /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B99E0F2017FE641300B35D4B /* Default@2x.png */; };
 		B99E0F2317FE641300B35D4B /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B99E0F2217FE641300B35D4B /* Default-568h@2x.png */; };
 		B99E0F2617FE641300B35D4B /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B99E0F2417FE641300B35D4B /* MainStoryboard.storyboard */; };
-		B99E0F2917FE641300B35D4B /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B99E0F2817FE641300B35D4B /* ViewController.m */; };
-		B99E0F3117FEA01400B35D4B /* Pixel.m in Sources */ = {isa = PBXBuildFile; fileRef = B99E0F3017FEA01400B35D4B /* Pixel.m */; };
 		B99E0F3317FEAC6F00B35D4B /* rose.png in Resources */ = {isa = PBXBuildFile; fileRef = B99E0F3217FEAC6F00B35D4B /* rose.png */; };
 		B99E0F3617FFF48200B35D4B /* KSImage.m in Sources */ = {isa = PBXBuildFile; fileRef = B99E0F3517FFF48200B35D4B /* KSImage.m */; };
 		B99E0F3917FFF55100B35D4B /* KSPixel.m in Sources */ = {isa = PBXBuildFile; fileRef = B99E0F3817FFF55100B35D4B /* KSPixel.m */; };
@@ -40,10 +38,6 @@
 		B99E0F2017FE641300B35D4B /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		B99E0F2217FE641300B35D4B /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		B99E0F2517FE641300B35D4B /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
-		B99E0F2717FE641300B35D4B /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		B99E0F2817FE641300B35D4B /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		B99E0F2F17FEA01400B35D4B /* Pixel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pixel.h; sourceTree = "<group>"; };
-		B99E0F3017FEA01400B35D4B /* Pixel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Pixel.m; sourceTree = "<group>"; };
 		B99E0F3217FEAC6F00B35D4B /* rose.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rose.png; sourceTree = "<group>"; };
 		B99E0F3417FFF48200B35D4B /* KSImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KSImage.h; sourceTree = "<group>"; };
 		B99E0F3517FFF48200B35D4B /* KSImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KSImage.m; sourceTree = "<group>"; };
@@ -97,19 +91,9 @@
 		B99E0F1217FE641300B35D4B /* Assignment04 */ = {
 			isa = PBXGroup;
 			children = (
-				B99E0F1B17FE641300B35D4B /* AppDelegate.h */,
-				B99E0F1C17FE641300B35D4B /* AppDelegate.m */,
-				B99E0F2417FE641300B35D4B /* MainStoryboard.storyboard */,
-				B99E0F2717FE641300B35D4B /* ViewController.h */,
-				B99E0F2817FE641300B35D4B /* ViewController.m */,
-				B99E0F2F17FEA01400B35D4B /* Pixel.h */,
-				B99E0F3017FEA01400B35D4B /* Pixel.m */,
+				B9E983441803D69000E5245B /* KSImageProccessing */,
 				B99E0F3A17FFF86E00B35D4B /* KSViewController.h */,
 				B99E0F3B17FFF86F00B35D4B /* KSViewController.m */,
-				B99E0F3717FFF55100B35D4B /* KSPixel.h */,
-				B99E0F3817FFF55100B35D4B /* KSPixel.m */,
-				B99E0F3417FFF48200B35D4B /* KSImage.h */,
-				B99E0F3517FFF48200B35D4B /* KSImage.m */,
 				B99E0F1317FE641300B35D4B /* Supporting Files */,
 			);
 			path = Assignment04;
@@ -118,6 +102,9 @@
 		B99E0F1317FE641300B35D4B /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				B99E0F2417FE641300B35D4B /* MainStoryboard.storyboard */,
+				B99E0F1B17FE641300B35D4B /* AppDelegate.h */,
+				B99E0F1C17FE641300B35D4B /* AppDelegate.m */,
 				B99E0F3217FEAC6F00B35D4B /* rose.png */,
 				B99E0F1417FE641300B35D4B /* Assignment04-Info.plist */,
 				B99E0F1517FE641300B35D4B /* InfoPlist.strings */,
@@ -128,6 +115,17 @@
 				B99E0F2217FE641300B35D4B /* Default-568h@2x.png */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		B9E983441803D69000E5245B /* KSImageProccessing */ = {
+			isa = PBXGroup;
+			children = (
+				B99E0F3717FFF55100B35D4B /* KSPixel.h */,
+				B99E0F3817FFF55100B35D4B /* KSPixel.m */,
+				B99E0F3417FFF48200B35D4B /* KSImage.h */,
+				B99E0F3517FFF48200B35D4B /* KSImage.m */,
+			);
+			name = KSImageProccessing;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -199,8 +197,6 @@
 			files = (
 				B99E0F1917FE641300B35D4B /* main.m in Sources */,
 				B99E0F1D17FE641300B35D4B /* AppDelegate.m in Sources */,
-				B99E0F2917FE641300B35D4B /* ViewController.m in Sources */,
-				B99E0F3117FEA01400B35D4B /* Pixel.m in Sources */,
 				B99E0F3617FFF48200B35D4B /* KSImage.m in Sources */,
 				B99E0F3917FFF55100B35D4B /* KSPixel.m in Sources */,
 				B99E0F3C17FFF86F00B35D4B /* KSViewController.m in Sources */,
@@ -326,6 +322,7 @@
 				B99E0F2E17FE641300B35D4B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
