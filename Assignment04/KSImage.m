@@ -137,42 +137,52 @@
 
 -(void) fadeGrayToPath:(NSString*) dirPath NumberOfImages:(int)numberOfImages
 {
-    KSPixel *pixel;
+    // initiate color variables with unsigned char 
     UInt8 red,green,blue,Y;
+    
+    // Loop numberOfImages times to generate an image each loop
     for (int i=0; i<=numberOfImages; i++) {
-        // Name the output file
-        _filename = [NSString stringWithFormat:@"%@%03d.png",_filenameWithoutExtension,i];
-        // Alpha-Blend
+        // Name the output file with leading zeros
+        _filename = [NSString
+                     stringWithFormat:@"%@%03d.png",_filenameWithoutExtension,i];
         
-        float curentAlpha = (float)i/numberOfImages;
+        // calculate current value of Alpha-Blend
+        float currentAlpha = (float)i/numberOfImages;
         
+        // Read the image array pixel by pixel
         for (int j=0; j<[_pixelsArray count]; j++) {
-            pixel = [_pixelsArray objectAtIndex:j];
+            // Fro each pixel, Extract the values of red, green and blue
+            KSPixel *pixel = [_pixelsArray objectAtIndex:j];
             red = pixel.red;
             green = pixel.green;
             blue = pixel.blue;
             
+            // Calculate the coorsponding Gray-scale value
             Y  =  0.299*red + 0.587*green + 0.114*blue;
-            // Alpha-Blending
-            red   = (1-curentAlpha) * red   + curentAlpha * Y;
-            green = (1-curentAlpha) * green + curentAlpha * Y;
-            blue  = (1-curentAlpha) * blue  + curentAlpha * Y;
-            //NSLog(@"RGB:(%d,%d,%d) point:(%d,%d)",red,green,blue,x,y);
-
+            
+            // Calculate the new values for red, green and blue after blending it with Y
+            red   = (1-currentAlpha) * red   + currentAlpha * Y;
+            green = (1-currentAlpha) * green + currentAlpha * Y;
+            blue  = (1-currentAlpha) * blue  + currentAlpha * Y;
+            
+            // Store the new values for red, green and blue in a pixel
             [pixel setRed:red];
             [pixel setGreen:green];
             [pixel setBlue:blue];
             
-            [tempPixelsArray addObject:pixel];
-            
-        }
+            // Store pixel information in a temporary pixels-array
+            [tempPixelsArray addObject:pixel];            
+        } // Finish reading/calculating all image pixels
         
+        // Draw this temporary pixels-array to a png file
         [self writeImageArray:tempPixelsArray ToPath:dirPath];
+        
+        // Remove all pixel in the temporary pixels-array
         [tempPixelsArray removeAllObjects];
     }
 }
 
--(void) morphToImage:(KSImage*) image2 ToPath:(NSString*) dirPath NumberOfImages:(int)numberOfImages
+-(void) fadeToImage:(KSImage*) image2 ToPath:(NSString*) dirPath NumberOfImages:(int)numberOfImages
 {
     UInt8 red,green,blue;
     int x,y;
@@ -202,9 +212,9 @@
         
     for (int i=0; i<=numberOfImages; i++) {
         // Name the output file
-        _filename = [NSString stringWithFormat:@"%@%03d.png",_filenameWithoutExtension,i];
+        _filename = [NSString stringWithFormat:@"%@%03d.png",_filenameWithoutExtension,i+101];
 
-        float curentAlpha = (float)i/numberOfImages;
+        float currentAlpha = (float)i/numberOfImages;
         
         for (int x=1; x<=width; x++) {
             for (int y=1; y<=height; y++) {
@@ -216,9 +226,9 @@
                     int red2 = colorRGB2[0]*255,   green2 = colorRGB2[1]*255,  blue2 = colorRGB2[2]*255;
                     
                     // Alpha-Blending
-                    red   = (1-curentAlpha) * red1   + curentAlpha * red2;
-                    green = (1-curentAlpha) * green1 + curentAlpha * green2;
-                    blue  = (1-curentAlpha) * blue1  + curentAlpha * blue2;
+                    red   = (1-currentAlpha) * red1   + currentAlpha * red2;
+                    green = (1-currentAlpha) * green1 + currentAlpha * green2;
+                    blue  = (1-currentAlpha) * blue1  + currentAlpha * blue2;
  
                     //NSLog(@"image1:(%d,%d,%d) image2:(%d,%d,%d)",red1,red2,green1,green2,blue1,blue2);
                     

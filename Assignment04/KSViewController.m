@@ -20,9 +20,9 @@
 {
     [super viewDidLoad];
     NSString *imagePath       = @"/Users/khaledalyousefi/Dropbox/CSC-505/rose.png";
-    NSString *outputDirPath   = @"/Users/khaledalyousefi/Dropbox/CSC-505/roseAVI2" ;
+    NSString *outputDirPath   = @"/Users/khaledalyousefi/Downloads/images" ;
     
-    /*
+    
      //#####################################  PART I-A  #####################################
      // Read the image into RGB space
      KSImage *image1 = [[KSImage alloc] initWithImageFile:imagePath];
@@ -55,21 +55,11 @@
      [image4 resizeImage:2 ToPath:outputDirPath];
      
     
-    // Fade between two different images
-    KSImage *image11 = [[KSImage alloc] initWithImageFile:@"/Users/khaledalyousefi/Dropbox/CSC-505/Homeworks/image1.png"];
-    KSImage *image12 = [[KSImage alloc] initWithImageFile:@"/Users/khaledalyousefi/Dropbox/CSC-505/Homeworks/image2.png"];
+     // Fade between two different images
+     KSImage *image11 = [[KSImage alloc] initWithImageFile:@"/Users/khaledalyousefi/Dropbox/CSC-505/rose1.png"];
+     KSImage *image12 = [[KSImage alloc] initWithImageFile:@"/Users/khaledalyousefi/Dropbox/CSC-505/rose2.png"];     
+     [image12 fadeToImage:image11 ToPath:outputDirPath NumberOfImages:10];
     
-    [image11 morphToImage:image12 ToPath:outputDirPath NumberOfImages:10];
-    */
-    
-    // Read the image into RGB space
-    KSImage *image2 = [[KSImage alloc] initWithImageFile:imagePath];
-    // Convert the image to YPbPr color space from RGB color space
-    [image2 convertToColorSpace:YPbPr];
-    // Fade an image into Gray within YPbPr color space by creating a sequence of images
-    [image2 fadeGrayToPath:outputDirPath NumberOfImages:100];
-    // Convert the image back to RGB color space
-    [image2 convertToColorSpace:RGB];
     
 }
 

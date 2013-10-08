@@ -31,6 +31,6 @@ typedef NS_ENUM(NSUInteger, ColorSpace) {
 -(void) convertToColorSpace:(ColorSpace)colorSpace;
 -(void) resizeImage:(int)stepSize ToPath:(NSString*)dirPath;
 
--(void) morphToImage:(KSImage*) image2 ToPath:(NSString*) dirPath NumberOfImages:(int)numberOfImages;
+-(void) fadeToImage:(KSImage*) image2 ToPath:(NSString*) dirPath NumberOfImages:(int)numberOfImages;
 
 @end
